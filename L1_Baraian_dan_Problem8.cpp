@@ -4,16 +4,7 @@ using std::cout;
 using std::string;
 using std::endl;
 
-
-// ! ex asta (Problem 3) plus inca un exercitiu la alegere
-
-// Der Code muss gut lesbar sein, und wo notwendig Kommentare enthalten.
-
-//* Problem 3.
-
-/* * a. Lesen Sie eine Sequenz von natürlichen Zahlen (Sequenz mit 0 beendet)
-und bestimmen Sie die Anzahl von 0 Ziffern des Produkts der gelesenen Zahlen.
-*/
+//* Problem 8.
 
 // ii o functie care returneaza un pointer catre unde incepe lista (quasi returneaza lista)
 // si returneaza prin parametrul length si lungimea listei
@@ -51,29 +42,9 @@ int* readArray(int &length) {
     return a; // returnam lista a (adica pointerul a care pointeaza catre primul element - de tip int - din lista)
 }
 
-int calculateArrayProduct(int *array, int array_length) {
-    int product = 1;
-    for (int i=0; i<array_length; i++) {
-        product *= array[i];
-    }
-
-    return product;
-}
-
-int countZerosInNumber(int number) {
-    int zeros_count=0; //hehe
-    while (number!=0) {
-        if (number%10==0) {
-            zeros_count++;
-        }
-        number /= 10;
-    }
-    return zeros_count;
-}
-
-/* *
-b. Gegeben sei ein Vektor von Zahlen, finde die längste zusammenhängende Teilfolge,
-sodass die Summe von zwei aufeinanderfolgenden Elementen eine Primzahl ist.
+/* * 8a. Bestimmen Sie die ersten n Paare von Zwillingszahlen,
+ * wobei n eine gegebene natürliche Zahl ungleich Null ist.
+ * Zwei Primzahlen p und q heißen twin, wenn q - p = 2 ist.
 */
 
 bool isPrime(int number) {
@@ -86,6 +57,33 @@ bool isPrime(int number) {
     return true;
 }
 
+int findNextPrime(int number) {
+    do {
+        number++;
+    }while (!isPrime(number));
+    return number;
+}
+
+void Zwillingszahlen(int n) {
+    // erstes paar ist immer 3,5
+    int p=3;
+    int q=5;
+    while (n!=0) {
+        cout<<"("<<p<<","<<q<<")\n";
+        do {
+            p=findNextPrime(p);
+            q=findNextPrime(q);
+        }while (q-p!=2);
+        n--;
+    }
+    cout<<endl;
+}
+
+/* *
+8b. Gegeben sei ein Vektor von Zahlen, finde die am längsten abnehmende aufeinanderfolgende Teilfolge.
+
+ii aproape exact aceeasi chestie ca la ex 3
+*/
 
 int* langsteTeilfolge(int* array, int array_length, int &max_teilfolge_lange) {
 
@@ -96,7 +94,7 @@ int* langsteTeilfolge(int* array, int array_length, int &max_teilfolge_lange) {
     int aktuelle_teilfolge_start_index=0;
 
     for (int i=0; i<array_length-1; i++) {
-        if (isPrime(array[i]+array[i+1])) {
+        if (array[i]>array[i+1]) {
             aktuelle_teilfolge_lange++;
 
         } else {
@@ -133,20 +131,18 @@ int main() {
     /* * a. Lesen Sie eine Sequenz von natürlichen Zahlen (Sequenz mit 0 beendet)
     und bestimmen Sie die Anzahl von 0 Ziffern des Produkts der gelesenen Zahlen.
     */
-    // int arramba_len=0;
-    // int* arramba = readArray(arramba_len);
-    // int anzahlNullZiffern = countZerosInNumber(calculateArrayProduct(arramba, arramba_len));
-    // cout<<anzahlNullZiffern;
-    // delete[] arramba // pt bune maniere
+
+    Zwillingszahlen(10);
 
     int birromo_len = 0;
+    cout<<"Schreiben sie eine folge von zahlen und eine 0 am Ende bitte sehr!\n";
     int* birromo = readArray(birromo_len);
 
     int langste_tf_len=0;
     int *langste_tf = langsteTeilfolge(birromo, birromo_len, langste_tf_len);
 
 
-    // ex: 2 4 3 8 10 3 0;  Resultat: 4 3 8 (cu lungime 3)
+    // 5 6
     cout<<"Langste Teilfolge hat "<<langste_tf_len<<" Elemente\n";
     for (int i=0; i<langste_tf_len; i++) {
         cout<<langste_tf[i]<<" ";
