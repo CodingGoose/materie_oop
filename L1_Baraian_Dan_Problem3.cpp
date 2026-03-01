@@ -51,7 +51,6 @@ int* readArray(int &length) {
     return a; // returnam lista a (adica pointerul a care pointeaza catre primul element - de tip int - din lista)
 }
 
-
 int calculateArrayProduct(int *array, int array_length) {
     int product = 1;
     for (int i=0; i<array_length; i++) {
@@ -73,25 +72,89 @@ int countZerosInNumber(int number) {
 }
 
 /* *
-b. Gegeben sei ein Vektor von Zahlen, finde die längste zusammenhängende Teilfolge
-so, dass die Summe von zwei aufeinanderfolgenden Elementen eine Primzahl ist.
+b. Gegeben sei ein Vektor von Zahlen, finde die längste zusammenhängende Teilfolge,
+sodass die Summe von zwei aufeinanderfolgenden Elementen eine Primzahl ist.
 */
+
+bool isPrime(int number) {
+    if (number==1){return false;}
+    for (int i=2; i<=number/2; i++) {
+        if (number%i==0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+int* langsteTeilfolge(int* array, int array_length, int &max_teilfolge_lange) {
+
+    max_teilfolge_lange=0;
+    int max_teilfolge_start_index=0;
+
+    int aktuelle_teilfolge_lange=1;
+    int aktuelle_teilfolge_start_index=0;
+
+    for (int i=0; i<array_length-1; i++) {
+        if (isPrime(array[i]+array[i+1])) {
+            aktuelle_teilfolge_lange++;
+
+        } else {
+            // s-o rupt continuitatea
+            if (max_teilfolge_lange<aktuelle_teilfolge_lange) {
+                max_teilfolge_lange=aktuelle_teilfolge_lange;
+                max_teilfolge_start_index = aktuelle_teilfolge_start_index;
+            }
+
+            aktuelle_teilfolge_lange = 1;
+            aktuelle_teilfolge_start_index = i+1;
+        }
+
+    }
+
+    //* mai trebuie verificat o data la final
+    if (max_teilfolge_lange<aktuelle_teilfolge_lange) {
+        max_teilfolge_lange=aktuelle_teilfolge_lange;
+        max_teilfolge_start_index = aktuelle_teilfolge_start_index;
+    }
+
+
+    //* facem arrayul nou si il returnam
+
+    int* max_teilfolge = new int [max_teilfolge_lange];
+    for (int i=0; i<max_teilfolge_lange; i++) {
+        max_teilfolge[i] = array[max_teilfolge_start_index+i];
+    }
+
+    return max_teilfolge;
+}
 
 int main() {
 
-    int ariru_len=0;
-    int *ariru = readArray(ariru_len);
+    /* * a. Lesen Sie eine Sequenz von natürlichen Zahlen (Sequenz mit 0 beendet)
+    und bestimmen Sie die Anzahl von 0 Ziffern des Produkts der gelesenen Zahlen.
+    */
+    // int arramba_len=0;
+    // int* arramba = readArray(arramba_len);
+    // int anzahlNullZiffern = countZerosInNumber(calculateArrayProduct(arramba, arramba_len));
+    // cout<<anzahlNullZiffern;
+    // delete[] arramba // pt bune maniere
 
-    for (int i=0; i<ariru_len; i++) {
-        cout<<ariru[i]<<" ";
+    int birromo_len = 0;
+    int* birromo = readArray(birromo_len);
+
+    int langste_tf_len=0;
+    int *langste_tf = langsteTeilfolge(birromo, birromo_len, langste_tf_len);
+
+
+    // ex: 2 4 3 8 10 3 0;  Resultat: 4 3 8 (cu lungime 3)
+    cout<<"Langste Teilfolge hat "<<langste_tf_len<<" Elemente\n";
+    for (int i=0; i<langste_tf_len; i++) {
+        cout<<langste_tf[i]<<" ";
     }
 
-    cout<<calculateArrayProduct(ariru, ariru_len)<<endl;
-
-    delete[] ariru; // dealocam ce i-am alocat lui ariru la inceput
-
-    cout<<countZerosInNumber(100389020); // <- mere :D
-
+    delete[] birromo;
+    delete[] langste_tf;
 
     return 0;
 }
